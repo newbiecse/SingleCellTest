@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace Demo
@@ -7,6 +7,11 @@ namespace Demo
     {
         private static bool IsPalindrome(string str)
         {
+            if (string.IsNullOrEmpty(str))
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
             int length = str.Length;
 
             for (int i = 0; i < length / 2; i++)
@@ -22,13 +27,35 @@ namespace Demo
 
         private static bool IsAnagramOfPalindrome(string str)
         {
-            var charCount = str.GroupBy(c => c, (c, i) => new
+            if (string.IsNullOrEmpty(str))
             {
-                character = c,
-                count = i.Count()
-            });
+                throw new ArgumentNullException(nameof(str));
+            }
 
-            return charCount.Count(c => c.count % 2 == 1) <= 1;
+            const int LENGTH = 256;
+            int[] count = new int[LENGTH];
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                count[str[i]]++;
+            }
+
+            int nOdd = 0;
+
+            for (int i = 0; i < LENGTH; i++)
+            {
+                if ((count[i] & 1) != 0)
+                {
+                    nOdd++;
+                }
+                    
+                if (nOdd > 1)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         static void Main(string[] args)
